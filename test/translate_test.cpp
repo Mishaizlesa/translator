@@ -47,5 +47,25 @@ TEST(State, brackets_work)
     auto tmp=solve("1.5 * ( 10 + 4 ) / 7");
     EXPECT_EQ(3, tmp.first);
 }
+TEST(State, cant_zero_div)
+{
+    auto tmp=solve("5 / 0");
+    EXPECT_EQ(1, tmp.second);
+}
+TEST(State, cant_calc_emty_brackets)
+{
+    auto tmp=solve("1 + ( )");
+    EXPECT_EQ(1, tmp.second);
+}
 
+TEST(State, can_neg_nmber)
+{
+    auto tmp=solve(" - 1 + 1");
+    EXPECT_EQ(0, tmp.first);
+}
+TEST(State, cant_solve_invalid)
+{
+    auto tmp=solve("* 1");
+    EXPECT_EQ(0, tmp.first);
+}
 
