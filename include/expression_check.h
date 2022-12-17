@@ -104,10 +104,6 @@ bool check_post(queue<State>& expr, std::pair<double,bool>& res){
                     tmp.push(a + b);
                     break;
                 case '-':
-                    if (a == 0 && b == LLONG_MIN)
-                    {
-                        tmp.push(LLONG_MAX);
-                    }
                     tmp.push(a - b);
                     break;
                 case '*':
