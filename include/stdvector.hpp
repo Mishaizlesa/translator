@@ -5,6 +5,7 @@
 #include <cmath>
 #include <exception>
 #include <initializer_list>
+#include <variant>
 template<typename T>class stdvector {
 protected:
     unsigned int size = 0;

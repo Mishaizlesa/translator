@@ -46,15 +46,16 @@ bool check_infix(queue<State>& expr, queue<State>& post){
                 tmp.push(cur);
                 break;
             case State::CLOSE_BRACKET:
+                if (tmp.empty()) return false;
                 cur = tmp.top();
                 tmp.pop();
                 while (cur.type_ != State::OPEN_BRACKET){
                     post.push(cur);
-                    cur = tmp.top();
-                    tmp.pop();
                     if (tmp.empty()){
                         return false;
                     }
+                    cur = tmp.top();
+                    tmp.pop();
                 }
                 break;
             case State::NUMBER:
