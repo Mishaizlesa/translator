@@ -1,19 +1,31 @@
 //#include "queue.h"
+bool check_num(std::string str){
+    int dot_use=1;
+    for(int i=1;i<str.size();++i){
+        if (!isdigit(str[i]) && !(str[i]=='.' && dot_use)) return false;
+        if (str[i]=='.') dot_use=0;
+    }
+    return true;
+}
+bool check_var(std::string str){
+    for(auto el: str){
+        if ((el-'a'<0 || el-'a'>=26) && (el!='_') && (el-'0'<0 || el-'0'>9) && (el-'A'<0 || el-'A'>25)) {
+            return false;
+        }
+    }
+    return true;
+}
 bool check_lex(std::string str){
     if (!str.size() || str[0]=='(' || str[0]==')' || str[0]=='+' || str[0]=='-' || str[0]=='/' || str[0]=='*'){
             if (str.size()>1 && (str[0]=='-' || str[0]==')' || str[0]=='(' || str[0]=='+' || str[0]=='/' || str[0]=='*')) return false;
             return true;
         }
     else if (str[0]<='9' && str[0]>='0'){
-        int dot_use=1;
-        for(int i=1;i<str.size();++i){
-            if (!isdigit(str[i]) && !(str[i]=='.' && dot_use)) return false;
-            if (str[i]=='.') dot_use=0;
-        }
-        return true;
-    }else return false;
+        return check_num(str);
+    }else if ((str[0]-'a'>=0 && str[0]-'a'<26) || str[0]=='_' || (str[0]-'A'>=0 && str[0]-'A'<26)) return check_var(str);
+    else return false;
 }
-bool check_str(std::string str, queue<State>& expr){
+bool check_str(std::string str, queue<State>& expr, std::map<std::string,double>&var){
     if (!str.size()) return false;
     str+=' ';
     std::size_t pos = str.find(' ');
@@ -22,12 +34,15 @@ bool check_str(std::string str, queue<State>& expr){
         auto tmp_str=str.substr(0, pos);
         if (!check_lex(tmp_str)) return false;
         auto tmp=State(str.substr(0, pos));
-        if (prev.type_==State::NUMBER && str.substr(0, pos)[0]=='-') expr.push(State("+"));
+        if ((prev.type_==State::NUMBER || prev.type_==State::VARIABLE) && str.substr(0, pos)[0]=='-') expr.push(State("+"));
         if (tmp.type_!=State::IGNORE){
             expr.push(tmp);
         }
         if (str.substr(0,pos)[0]=='-'){
             expr.push(State("*"));
+        }
+        if (tmp.type_==State::VARIABLE){
+            var[tmp.data]=-1;
         }
         prev=tmp;
         str = str.substr(pos + 1);
@@ -61,6 +76,9 @@ bool check_infix(queue<State>& expr, queue<State>& post){
             case State::NUMBER:
                 post.push(cur);
                 break;
+            case State::VARIABLE:
+                post.push(cur);
+                break;
             case State::OPERATION:
                 while (!tmp.empty() && tmp.top().priority() >= cur.priority()){
                     post.push(tmp.top());
@@ -79,10 +97,13 @@ bool check_infix(queue<State>& expr, queue<State>& post){
     }
     return true;
 }
-bool check_post(queue<State>& expr, std::pair<double,bool>& res){
-    if (expr.get_size() == 1 && expr.front().type_ == State::NUMBER){
-        res=std::make_pair(std::stod(expr.front().data),0);
-        return true;
+bool check_post(queue<State>& expr, std::pair<double,bool>& res,std::map<std::string,double>&var){
+    if (expr.get_size() == 1){
+        if (expr.front().type_==State::VARIABLE){
+            res={var[expr.front().data],0};
+        }else if (expr.front().type_==State::NUMBER){
+            res={std::stod(expr.front().data),0};
+        }
     }
     stack< double > tmp;
     while (!expr.empty()){
@@ -90,6 +111,8 @@ bool check_post(queue<State>& expr, std::pair<double,bool>& res){
         expr.pop();
         if (cur.type_ == State::NUMBER){
             tmp.push(std::stod(cur.data));
+        }else if (cur.type_==State::VARIABLE){
+            tmp.push(var[cur.data]);
         }
         else{
             char operand = cur.data[0];
