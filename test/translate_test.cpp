@@ -1,71 +1,92 @@
 #include "solve_expr.h"
 #include <gtest.h>
 #include <iostream>
-TEST(State, can_create_expr)
+class translate : public ::testing::Test{
+protected:
+    std::vector<double>a;
+};
+TEST_F(translate, can_create_expr)
 {
-    EXPECT_EQ(12, solve("12").first + solve("12").second);
+    EXPECT_EQ(12, solve("12",a).first + solve("12",a).second);
 }
-TEST(State, cant_solve_empty)
+TEST_F(translate, cant_solve_empty)
 {
-    EXPECT_EQ(1, solve("").second);
+    EXPECT_EQ(1, solve("",a).second);
 }
-TEST(State, correct_add)
+TEST_F(translate, correct_add)
 {
-    auto tmp=solve("1 + 1");
+    auto tmp=solve("1 + 1",a);
     EXPECT_EQ(2, tmp.first);
 }
-TEST(State, correct_sub)
+TEST_F(translate, correct_sub)
 {
-    auto tmp=solve("- ( - 4 + 5 )");
+    auto tmp=solve("- ( - 4 + 5 )",a);
     EXPECT_EQ(-1, tmp.first);
 }
-TEST(State, cant_solve_with_incorrect_symbol)
+TEST_F(translate, cant_solve_with_incorrect_symbol)
 {
-    auto tmp=solve("- ( - 4aaaaa + 5 )");
+    auto tmp=solve("- ( - 4aaaaa + 5 )",a);
     EXPECT_EQ(1, tmp.second);
 }
-TEST(State, can_mult)
+TEST_F(translate, can_mult)
 {
-    auto tmp=solve("1 * 4.5");
+    auto tmp=solve("1 * 4.5",a);
     EXPECT_EQ(4.5, tmp.first);
 }
-TEST(State, can_div)
+TEST_F(translate, can_div)
 {
-    auto tmp=solve("1 / 5");
+    auto tmp=solve("1 / 5",a);
     EXPECT_EQ(0.2, tmp.first);
 }
 
-TEST(State, cant_solve_with_incorrecr_brackets)
+TEST_F(translate, cant_solve_with_incorrecr_brackets)
 {
-    auto tmp=solve("( 1 + 1 ) )");
+    auto tmp=solve("( 1 + 1 ) )",a);
     std::cout<<tmp.first;
     EXPECT_EQ(1, tmp.second);
 }
 
-TEST(State, brackets_work)
+TEST_F(translate, brackets_work)
 {
-    auto tmp=solve("1.5 * ( 10 + 4 ) / 7");
+    auto tmp=solve("1.5 * ( 10 + 4 ) / 7",a);
     EXPECT_EQ(3, tmp.first);
 }
-TEST(State, cant_zero_div)
+TEST_F(translate, cant_zero_div)
 {
-    auto tmp=solve("5 / 0");
+    auto tmp=solve("5 / 0",a);
     EXPECT_EQ(1, tmp.second);
 }
-TEST(State, cant_calc_emty_brackets)
+TEST_F(translate, cant_calc_emty_brackets)
 {
-    auto tmp=solve("1 + ( )");
+    auto tmp=solve("1 + ( )",a);
     EXPECT_EQ(1, tmp.second);
 }
 
-TEST(State, can_neg_nmber)
+TEST_F(translate, can_neg_nmber)
 {
-    auto tmp=solve(" - 1 + 1");
+    auto tmp=solve(" - 1 + 1",a);
     EXPECT_EQ(0, tmp.first);
 }
-TEST(State, cant_solve_invalid)
+TEST_F(translate, cant_solve_invalid)
 {
-    auto tmp=solve("* 1");
+    auto tmp=solve("* 1",a);
     EXPECT_EQ(0, tmp.first);
 }
-
+TEST_F(translate, can_solve_variable)
+{
+    a.push_back(1);a.push_back(2);
+    auto tmp=solve("- a + b",a);
+    EXPECT_EQ(1, tmp.first);
+}
+TEST_F(translate, cant_solve_invalid_variable_1)
+{
+    a.push_back(1);a.push_back(2);
+    auto tmp=solve("- 1a + b",a);
+    EXPECT_EQ(1, tmp.second);
+}
+TEST_F(translate, cant_solve_invalid_variable_2)
+{
+    a.push_back(1);a.push_back(2);
+    auto tmp=solve("- (a + b",a);
+    EXPECT_EQ(1, tmp.second);
+}
