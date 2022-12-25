@@ -1,3 +1,1 @@
 # TRANSLATION
-# translator
-# translator
