@@ -50,7 +50,7 @@ bool check_lex(std::string str){
     }else if ((str[0]-'a'>=0 && str[0]-'a'<26) || str[0]=='_' || (str[0]-'A'>=0 && str[0]-'A'<26)) return check_var(str);
     else return false;
 }
-template <class arr>bool check_str(std::string str, queue<State>& expr, arr& var){
+template <class arr>bool check_str(std::string str, TDynamicQueue<State>& expr, arr& var){
     if (!str.size()) return false;
     str+=' ';
     std::size_t pos = str.find(' ');
@@ -75,9 +75,9 @@ template <class arr>bool check_str(std::string str, queue<State>& expr, arr& var
     }
     return true;
 }
-bool check_infix(queue<State>& expr, queue<State>& post){
+bool check_infix(TDynamicQueue<State>& expr, TDynamicQueue<State>& post){
     stack<State>tmp;
-    while (expr.get_size()) {
+    while (expr.size()) {
         auto cur=expr.front();
         expr.pop();
         //std::cout<<cur.data<<"\n";
@@ -124,8 +124,8 @@ bool check_infix(queue<State>& expr, queue<State>& post){
     }
     return true;
 }
-template <class arr> bool check_post(queue<State>& expr, stdvector<std::pair<polynome,bool>>& res,arr& var){
-    if (expr.get_size() == 1){
+template <class arr> bool check_post(TDynamicQueue<State>& expr, stdvector<std::pair<polynome,bool>>& res,arr& var){
+    if (expr.size() == 1){
         if (expr.front().type_==State::VARIABLE){
             res.push_back({var[expr.front().data],0});
         }else if (expr.front().type_==State::NUMBER){

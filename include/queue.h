@@ -1,40 +1,131 @@
-#include "stdvector.h"
-template <typename T> class queue: public stdvector<T>{
-private:
-    T* head, *tail;
+#ifndef __TDynamicMatrix_H__
+#define __TDynamicMatrix_H__
+
+#include<algorithm>
+#include<stdexcept>
+
+
+template<typename T>
+class TDynamicQueue
+{
+
+	//комментарий
+protected:
+	int sz;
+	int memSize;
+	T* pMem;
+	T* head, * tail;
+
 public:
-    queue(int n=100000): stdvector<T>(n){
-        this->size=0;
-        head=this->data;
-        tail=this->data;
-    }
-    void resize(int n_size)=delete;
-    
-    
-    T& operator [](int i)=delete;
-    
-    void insert(int i,T val)=delete;
-    
-    bool empty() {return (this->size==0);}
-    
-    T front(){
-        if (this->empty()) throw std::out_of_range("queue is empty");
-        return *head;
-    }
-    void push(T a){
-        if (tail==head){
-            this->set_cap(this->capacity*2);
-            head = this->data;
-            tail = this->data + this->size;
-        }
-        *tail = a;
-        tail = this->data + (tail - this->data + 1) % this->capacity;
-        this->size++;
-    }
-    void pop(){
-        if (this->empty()) throw std::out_of_range("queue is empty");
-        head = this->data+(head - this->data + 1)%this->capacity;
-        this->size--;
-    }
-    int get_size() {return this->size;}
+	static const int COEFF = 2;
+	TDynamicQueue()
+	{
+		sz = 0;
+		memSize = 0;
+		pMem = nullptr;
+		head = pMem;
+		tail = pMem;
+	}
+
+	TDynamicQueue(const TDynamicQueue& q)
+	{
+		sz = q.sz;
+		memSize = q.memSize;
+
+		pMem = new T[memSize];
+		head = pMem;
+		tail = pMem + sz;
+		std::copy(q.pMem, q.pMem + sz, pMem);
+	}
+
+	~TDynamicQueue()
+	{
+		if (pMem) delete[] pMem;
+	}
+
+	friend void swap(TDynamicQueue& lhs, TDynamicQueue& rhs) noexcept
+	{
+		std::swap(lhs.sz, rhs.sz);
+		std::swap(lhs.pMem, rhs.pMem);
+	}
+	TDynamicQueue& operator=(const TDynamicQueue& v)
+	{
+		if (this == &v)
+			return *this;
+
+		TDynamicQueue tmp(v);
+		swap(*this, tmp);
+		return *this;
+	}
+
+	int size() const noexcept { return sz; }
+	int capacity() const noexcept { return memSize; }
+	bool empty() const noexcept { return sz == 0; }
+
+
+	///// сравнение
+	bool operator==(const TDynamicQueue& v) const noexcept
+	{
+		if (sz != v.sz)
+			return false;
+
+		for (int i = 0; i < sz; i++)
+		{
+			if (pMem[i] != v.pMem[i])
+				return false;
+		}
+
+		return true;
+	}
+	bool operator!=(const TDynamicQueue& v) const noexcept
+	{
+		return !(*this == v);
+	}
+
+	T front() const
+	{
+		if (sz == 0)
+			throw std::out_of_range("queue is empty");
+
+		return *head;
+	}
+	void pop()
+	{
+		if (sz == 0)
+			throw std::out_of_range("queue is empty");
+
+		head = pMem + (head - pMem + 1) % memSize;
+		sz--;
+	}
+
+	void push(const T& el)
+	{
+
+		if (tail == head)
+		{
+			int newSize = (memSize + 1) * COEFF;
+			T* tmp = new T[newSize];
+			memSize = newSize;
+			for (int i = 0; i < sz; i++)
+			{
+				tmp[i] = *(pMem + (head - pMem + i) % sz);
+			}
+			//std::copy(pMem, pMem + sz, tmp);
+			if (pMem) delete[] pMem;
+			pMem = tmp;
+			head = pMem;
+			tail = pMem + sz;
+		}
+
+		*tail = el;
+		tail = pMem + (tail - pMem + 1) % memSize;
+		sz++;
+	}
+
+
+
+
 };
+
+
+#endif

@@ -14,8 +14,8 @@
 stdvector<std::pair<polynome,bool>> solve(std::string str, stdvector<polynome>& test){
     stdvector<std::pair<polynome,bool>> err(0);
     stdvector<std::pair<polynome,bool>> res(0);
-    queue<State>inf;
-    queue<State>post;
+    TDynamicQueue<State>inf;
+    TDynamicQueue<State>post;
     my_unordered_map<polynome>tmp_var;
     my_unordered_map<polynome>var_hash;
     Tree<std::string,polynome>var_tree;
@@ -34,6 +34,7 @@ stdvector<std::pair<polynome,bool>> solve(std::string str, stdvector<polynome>& 
     else{
         for(auto& el: tmp_var){
             if (!el.first.size()) continue;
+            std::cout << "2222";
             polynome pol;
             std::cout<<el.first<<" = ";
             std::string str;getline(std::cin,str);
@@ -76,9 +77,9 @@ stdvector<std::pair<polynome,bool>> solve(std::string str, stdvector<polynome>& 
         return err;
     }
     //std::cout<<var_tree["a"]<<"\n";
-    auto cop=post;
+    TDynamicQueue<State>cop(post);
     if (!check_post(post,res,var_hash)) res.push_back({polynome(),false});
-    post=cop;
+    post = cop;
     if (!check_post(post,res,var_tree)) res.push_back({polynome(),false});
     post=cop;
     if (!check_post(post,res,var_table)) res.push_back({polynome(),false});

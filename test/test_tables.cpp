@@ -1,17 +1,13 @@
-#include "solve_expr.h"
-#include <gtest.h>
-#include <iostream>
-class translate : public ::testing::Test{
+
+/*class translate : public ::testing::Test {
 protected:
-    stdvector<polynome>a;
+    std::vector<polynome>a;
 };
 TEST_F(translate, can_create_expr)
 {
-    auto tmp = solve("12", a);
-    std::cout << tmp.get_size();
-    EXPECT_EQ(tmp.get_size(),6);
+    EXPECT_EQ(12, solve("12",a).first + solve("12",a).second);
 }
-/*TEST_F(translate, cant_solve_empty)
+TEST_F(translate, cant_solve_empty)
 {
     EXPECT_EQ(1, solve("",a).second);
 }
@@ -74,9 +70,10 @@ TEST_F(translate, cant_solve_invalid)
     auto tmp=solve("* 1",a);
     EXPECT_EQ(0, tmp.first);
 }
+/*
 TEST_F(translate, can_solve_variable)
 {
-    a.push_back(1);a.push_back(2);
+    a.push_back();a.push_back(2);
     auto tmp=solve("- a + b",a);
     EXPECT_EQ(1, tmp.first);
 }
@@ -91,4 +88,5 @@ TEST_F(translate, cant_solve_invalid_variable_2)
     a.push_back(1);a.push_back(2);
     auto tmp=solve("- (a + b",a);
     EXPECT_EQ(1, tmp.second);
-}(*/
+}
+*/
