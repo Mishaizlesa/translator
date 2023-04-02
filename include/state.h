@@ -4,6 +4,7 @@
 #include <string>
 #include <exception>
 #include <map>
+#include "polynome.h"
 struct State{
     int type_;
     std::string data;
@@ -13,12 +14,17 @@ struct State{
         NUMBER,
         OPERATION,
         IGNORE,
-        VARIABLE
+        VARIABLE,
+        FUNC
     };
     State ()=default;
     State (const std::string& str){
         data=str;
-        if (str[0]=='('){
+        std::string str_cop(str);
+        for (char& c : str_cop)
+            c = tolower(c);
+        if (str_cop=="difx" || str_cop=="dify" || str_cop == "difz" || str_cop=="intx" || str_cop=="inty" || str_cop=="intz") type_=FUNC;
+        else if (str[0]=='('){
             type_=OPEN_BRACKET;
         }
         else if (str[0] == ')'){
@@ -43,6 +49,7 @@ struct State{
         if (data[0]=='+' || data[0]=='-') return 2;
         else if (data[0]=='*' || data[0]=='/') return 3;
         else if (data[0]==')' || data[0]=='(') return 1;
+        else if (type_ == FUNC) return 4;
         else return 0;
     }
     
