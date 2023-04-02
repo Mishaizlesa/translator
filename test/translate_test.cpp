@@ -1,5 +1,5 @@
 #include "solve_expr.h"
-#include <gtest.h>
+#include <gtest/gtest.h>
 #include <iostream>
 class translate : public ::testing::Test{
 protected:

@@ -17,7 +17,7 @@ add_subdirectory(include)
 add_subdirectory(samples)
 
 if(BUILD_TESTING)
-    add_subdirectory(gtest)
+    add_subdirectory(3rdparty/googletest)
 	add_subdirectory(test)
 endif()
 

@@ -1,5 +1,5 @@
 #include "stack.h"
-#include <gtest.h>
+#include <gtest/gtest.h>
 
 TEST(stack, can_create_stack)
 {
