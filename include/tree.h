@@ -1,3 +1,4 @@
+#include <stack>
 template <class A, class B>class Tree{
 private:
     struct node{
@@ -22,6 +23,7 @@ public:
         node* root;
         iterator ()= default;
     public:
+        
         explicit iterator(const Tree& t): root(t.root){};
         iterator(node* _node, node* root_) { data_it = _node; root=root_;}
         iterator(const iterator& it) { data_it = it.data_it; root=it.root; }
@@ -30,7 +32,7 @@ public:
         std::pair<A,B&> operator*() { return {data_it->key, data_it->val}; }
         iterator& operator ++(){
             auto tmp=root;
-            stack<node*>stack;
+            std::stack<node*>stack;
             while (tmp && tmp->key!=data_it->key) {
                 stack.push(tmp);
                 if (tmp->key>data_it->key) tmp=tmp->l;
@@ -45,15 +47,26 @@ public:
                 return *this;
             }
             auto prev=data_it;
-            while (stack.size() && (stack.front()->r && stack.front()->r->key==prev->key)) {
-                prev=stack.front();
+            while (stack.size() && (stack.top()->r && stack.top()->r->key==prev->key)) {
+                prev=stack.top();
                 stack.pop();
             }
             if (!stack.size()) data_it=nullptr;
-            else data_it=stack.front();
+            else data_it=stack.top();
             return *this;
         }
     };
+    Tree() { root = nullptr; }
+    void delete_node(node* node)
+    {
+        if (!node) return;
+        delete_node(node->l);
+        delete_node(node->r);
+        delete node;
+    }
+    void clear() { delete_node(root); root = nullptr; }
+    ~Tree() { clear(); }
+
     node* find(A key, node* t){
         if (!t || t->key==key) return t;
         if (t->key>key) return find(key, t->l);
@@ -61,8 +74,8 @@ public:
             return find(key, t->r);
         }
     }
-    void insert(A key_, B val_){
-        root=insert_real(key_, val_, root);
+    void insert(std::pair<A, B> pa){
+        root=insert_real(pa.first, pa.second, root);
     }
     node* insert_real(A key_, B val_, node* t){
         if (!t){
@@ -127,11 +140,15 @@ public:
             node* right;
             if (!mmax){
                 right=t->r;
+                if (t == root)
+                    root = nullptr;
                 delete t;
                 return right;
             }
             left=t->l;
             right=t->r;
+            if (t == root)
+                root = nullptr;
             delete t;
             mmax->r=right;
             mmax->l=erasemax(left);
@@ -140,6 +157,7 @@ public:
         t=balance(t);
         return t;
     }
+
     node* erasemax(node* t){
         if (t->r){
             t->r=erasemax(t->r);
@@ -167,7 +185,7 @@ public:
     }
     iterator begin(){
         auto tmp=root;
-        while (tmp->l) {
+        while (tmp && tmp->l) {
             tmp=tmp->l;
         }
         return iterator(tmp,root);
@@ -180,7 +198,7 @@ public:
         if (it=find(key,root)){
             return it->val;
         }else{
-            insert(key, B());
+            insert(std::make_pair(key, B()));
             return find(key,root)->val;
         }
     }
@@ -188,4 +206,9 @@ public:
         return abs(t->l->height-t->r->height)<2;
     }
     node* getroot(){return root;}
+
+    void erase(const A& key)
+    {
+        erase(root, key);
+    }
 };

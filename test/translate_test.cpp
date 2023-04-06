@@ -1,20 +1,84 @@
 #include "solve_expr.h"
 #include <gtest/gtest.h>
 #include <iostream>
-class translate : public ::testing::Test{
+class translate : 
+    public ::testing::TestWithParam<int>{
+
 protected:
     stdvector<polynome>a;
+
+    polynome A, B, C, D;
+
+    translate()
+    {
+        srand(40);
+        const int K = 5;
+        for (int i = 0; i < 5; ++i)
+        {
+            A.insert(monome(rand(), rand(), rand(), rand()));
+            A.insert(monome(rand(), rand(), rand(), rand()));
+
+            B.insert(monome(rand(), rand(), rand(), rand()));
+            B.insert(monome(rand(), rand(), rand(), rand()));
+
+            C.insert(monome(rand(), rand(), rand(), rand()));
+            C.insert(monome(rand(), rand(), rand(), rand()));
+            C.insert(monome(rand(), rand(), rand(), rand()));
+
+            D.insert(monome(rand(), rand(), rand(), rand()));
+        }
+
+        a.push_back(A);
+        a.push_back(B);
+        a.push_back(C);
+        a.push_back(D);
+    }
+    
 };
-TEST_F(translate, can_create_expr)
+
+INSTANTIATE_TEST_SUITE_P(trans4late, translate, ::testing::Values(-1, 0, 1));
+
+
+TEST_P(translate, can_create_monome)
 {
-    auto tmp = solve("12", a);
-    std::cout << tmp.get_size();
-    EXPECT_EQ(tmp.get_size(),6);
+    EXPECT_NO_THROW(monome(GetParam(), 1, 1, 1));
 }
-/*TEST_F(translate, cant_solve_empty)
+
+TEST(test, can_create_polynome)
 {
-    EXPECT_EQ(1, solve("",a).second);
+    EXPECT_NO_THROW(polynome());
 }
+
+TEST_F(translate, can_difx)
+{
+    EXPECT_NO_THROW(A.difx());
+}
+TEST_F(translate, can_dify)
+{
+    EXPECT_NO_THROW(A.dify());
+}
+
+TEST_F(translate, can_difz)
+{
+    EXPECT_NO_THROW(A.difz());
+}
+
+
+
+TEST_P(translate, can_insert_monome)
+{
+    polynome pol;
+    EXPECT_NO_THROW(pol.insert(monome(GetParam(), 1, 1, 1)));
+}
+
+TEST_F(translate, can_solve)
+{
+    EXPECT_EQ(6, solve("A + B + C * A",a).get_size());
+}
+
+
+
+/*
 TEST_F(translate, correct_add)
 {
     auto tmp=solve("1 + 1",a);

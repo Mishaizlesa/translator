@@ -17,7 +17,6 @@ public:
         y=y_;
         z=z_;
     }
-    
     bool operator > (const monome& b){
         if (x==b.x){
             if (y==b.y){
@@ -45,9 +44,20 @@ public:
             ptr++;
         }
     }
-    bool operator == (monome b){
+    //bool operator == (monome b){
+    //    return x==b.x && y==b.y && z==b.z;
+    //}
+
+    bool operator ^ (const monome& b) {
         return x==b.x && y==b.y && z==b.z;
     }
+
+    bool operator == (const monome& b)
+    {
+        return *this ^ b && abs(coef - b.coef) < 1e-7;
+    }
+
+    bool operator != (const monome& b) { return !(*this == b); }
     monome operator + (const monome& b){
         if (abs(coef+b.coef)<1e-7) return monome(0,0,0,0);
         return monome(coef+b.coef,x,y,z);

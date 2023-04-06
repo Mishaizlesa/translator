@@ -79,11 +79,11 @@ public:
         if (!(find(key).second)) return;
         ll tmp=hash(key);
         ll cnt=1;
-        while (data[tmp].val.first!=key) {
+        while (data[tmp].first!=key) {
             tmp+=(tmp+cnt*cnt*k)%mod;
         }
-        data[tmp].used=1;
-        data[tmp].valid=0;
+        data[tmp].th.used=1;
+        data[tmp].th.valid=0;
     }
     ll hash(std::string key){
         ll res=0;

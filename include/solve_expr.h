@@ -16,19 +16,24 @@ stdvector<std::pair<polynome,bool>> solve(std::string str, stdvector<polynome>& 
     stdvector<std::pair<polynome,bool>> res(0);
     TDynamicQueue<State>inf;
     TDynamicQueue<State>post;
+
     my_unordered_map<polynome>tmp_var;
+
     my_unordered_map<polynome>var_hash;
-    Tree<std::string,polynome>var_tree;
-    Table<std::string,polynome>var_table;
     HashTable<polynome>var_hash_list;
+
+    Tree<std::string,polynome>var_tree;
     TreeT<std::string, polynome>var_tree_rb;
+
+    Table<std::string,polynome>var_table;
     TableT<std::string, polynome>var_table_unord;
     if (!check_str(str,inf,tmp_var)) return err;
     if (test.get_size()){
         int i=0;
         for(auto& el:tmp_var){
             el.second=test[i];
-            i++;
+            if (el.first.size())
+                i++;
         }
     }
     else{
@@ -78,17 +83,17 @@ stdvector<std::pair<polynome,bool>> solve(std::string str, stdvector<polynome>& 
     }
     //std::cout<<var_tree["a"]<<"\n";
     TDynamicQueue<State>cop(post);
-    if (!check_post(post,res,var_hash)) res.push_back({polynome(),false});
+    if (!check_post(post,res,var_hash)) return err;
     post = cop;
-    if (!check_post(post,res,var_tree)) res.push_back({polynome(),false});
+    if (!check_post(post,res,var_hash)) return err;
     post=cop;
-    if (!check_post(post,res,var_table)) res.push_back({polynome(),false});
+    if (!check_post(post,res,var_table)) return err;
     post=cop;
-    if (!check_post(post,res,var_hash_list)) res.push_back({polynome(),false});
+    if (!check_post(post,res,var_hash_list)) return err;
     post=cop;
-    if (!check_post(post,res,var_tree_rb)) res.push_back({polynome(),false});
+    if (!check_post(post,res,var_tree_rb)) return err;
     post=cop;
-    if (!check_post(post,res,var_table_unord)) res.push_back({polynome(),false});
+    if (!check_post(post,res,var_table_unord)) return err;
     return res;
 }
 #endif /* solve_expr_h */

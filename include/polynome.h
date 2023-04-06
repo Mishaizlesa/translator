@@ -14,7 +14,7 @@ public:
             ++it;
         }
         if (it.node){
-            if (*it == a){
+            if (*it ^ a){
                 *it=*it+a;
             }else data.insert_after(it,a);
         }else{
@@ -104,6 +104,21 @@ public:
     bool valid(){
         return !(abs((*data.begin()).getc())<1e-7);
     }
+
+    bool operator == (polynome p)
+    {
+        auto it1 = this->data.begin();
+        auto it2 = p.data.begin();
+
+        for (; it1 != this->data.end() && it2 != p.data.end(); ++it1, ++it2)
+        {
+            if ((*it1) != (*it2))
+                return false;
+        }
+        return it1 == this->data.end() && it2 == p.data.end();
+    }
+
+    bool operator != (polynome p) { return !(*this == p); }
     polynome difx(){
         polynome res;
         for(auto el: data){

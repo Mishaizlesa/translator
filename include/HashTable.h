@@ -46,7 +46,7 @@ public:
 	HashTable(int seed = ALPH_SZ, bool used_random_hash = true);
 	HashTable(const HashTable& other) = default;
 	iterator begin();
-	iterator end() { return iterator(v[v.size() - 1].end(), v.size() - 1, this); }
+	iterator end() { return iterator(v.back().end(), v.size() - 1, this); }
 	iterator insert(const std::pair<TKey, TValue>& el);
 	iterator erase(const TKey& key); // элемент, который встал на место удаленного 
 	iterator find(const TKey& key);
@@ -69,7 +69,10 @@ inline typename HashTable<TValue, TKey>::iterator& HashTable<TValue, TKey>::iter
 		while (index_in_vector + 1 < ht->v.size() && ht->v[index_in_vector].size() == 0)
 			++index_in_vector;
 
-		iter = ht->v[index_in_vector].begin();
+		if (index_in_vector == ht->v.size())
+			*this = ht->end();
+		else
+			iter = ht->v[index_in_vector].begin();
 	}
 
 	return *this;
@@ -83,7 +86,10 @@ inline typename HashTable<TValue, TKey>::iterator HashTable<TValue, TKey>::begin
 	while (ind + 1 < v.size() && v[ind].size() == 0)
 		++ind;
 
-	return iterator(v[ind].begin(), ind, this);
+	if (ind < v.size())
+		return iterator(v[ind].begin(), ind, this);
+	else
+		return end();
 }
 
 
@@ -115,6 +121,7 @@ template<class TValue, class TKey>
 inline HashTable<TValue, TKey>::HashTable(int seed, bool used_random_hash)
 {
 	v = std::vector<TDynamicList<std::pair<TKey, TValue>>>();
+	v.push_back(TDynamicList<std::pair<TKey, TValue>>());
 	if (!used_random_hash)
 		srand(seed);
 
@@ -167,6 +174,20 @@ inline typename HashTable<TValue, TKey>::iterator HashTable<TValue, TKey>::erase
 
 	++res;
 	return res;
+}
+
+template<class TValue, class TKey>
+inline typename HashTable<TValue, TKey>::iterator HashTable<TValue, TKey>::find(const TKey& key)
+{
+	size_t hash = hash_str(el.first);
+	size_t index = get_index(hash);
+
+
+	for (auto it = v[index].begin(); it != v[index].end(); ++it)
+		if ((*it).first == el.first)
+			return iterator(it, index, this);
+
+	return end();
 }
 
 

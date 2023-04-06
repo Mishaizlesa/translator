@@ -35,7 +35,11 @@ public:
 		pMem = new T[memSize];
 		head = pMem;
 		tail = pMem + sz;
-		std::copy(q.pMem, q.pMem + sz, pMem);
+		for (int i = 0; i < sz; i++)
+		{
+			pMem[i] = *(q.pMem + (q.head - q.pMem + i) % sz);
+		}
+
 	}
 
 	~TDynamicQueue()
@@ -47,6 +51,9 @@ public:
 	{
 		std::swap(lhs.sz, rhs.sz);
 		std::swap(lhs.pMem, rhs.pMem);
+		std::swap(lhs.memSize, rhs.memSize);
+		std::swap(lhs.head, rhs.head);
+		std::swap(lhs.tail, rhs.tail);
 	}
 	TDynamicQueue& operator=(const TDynamicQueue& v)
 	{

@@ -16,6 +16,9 @@ public:
 	TValue& operator[](const TKey& key);
 	TValue operator[] (const TKey& key) const;
 
+	typename std::vector<std::pair<TKey, TValue>>::iterator begin() { return v.begin(); }
+	typename std::vector<std::pair<TKey, TValue>>::iterator end() { return v.end(); }
+
 };
 
 template<typename TKey, typename TValue>
@@ -71,8 +74,9 @@ inline void TableT<TKey, TValue>::erase(const TKey& key)
 	if (it != v.end())
 	{
 		swap(it, --v.end());
+		v.pop_back();
 		return;
 	}
 
-	v.pop_back();
+	
 }

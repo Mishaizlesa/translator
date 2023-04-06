@@ -1,92 +1,84 @@
-
-/*class translate : public ::testing::Test {
-protected:
-    std::vector<polynome>a;
+#include "gtest/gtest.h"
+#include <list>
+#include "table.h"
+#include "TableT.h"
+#include "tree.h"
+#include "TreeT.h"
+#include "HashTable.h"
+#include "hash_table.h"
+template <typename T>
+class FooTest : public testing::Test {
+public:
+    using MyTable = T;
 };
-TEST_F(translate, can_create_expr)
-{
-    EXPECT_EQ(12, solve("12",a).first + solve("12",a).second);
-}
-TEST_F(translate, cant_solve_empty)
-{
-    EXPECT_EQ(1, solve("",a).second);
-}
-TEST_F(translate, correct_add)
-{
-    auto tmp=solve("1 + 1",a);
-    EXPECT_EQ(2, tmp.first);
-}
-TEST_F(translate, correct_sub)
-{
-    auto tmp=solve("- ( - 4 + 5 )",a);
-    EXPECT_EQ(-1, tmp.first);
-}
-TEST_F(translate, cant_solve_with_incorrect_symbol)
-{
-    auto tmp=solve("- ( - 4aaaaa + 5 )",a);
-    EXPECT_EQ(1, tmp.second);
-}
-TEST_F(translate, can_mult)
-{
-    auto tmp=solve("1 * 4.5",a);
-    EXPECT_EQ(4.5, tmp.first);
-}
-TEST_F(translate, can_div)
-{
-    auto tmp=solve("1 / 5",a);
-    EXPECT_EQ(0.2, tmp.first);
-}
 
-TEST_F(translate, cant_solve_with_incorrecr_brackets)
-{
-    auto tmp=solve("( 1 + 1 ) )",a);
-    std::cout<<tmp.first;
-    EXPECT_EQ(1, tmp.second);
-}
+using MyTypes = ::testing::Types<
+    TableT<std::string, int>
+    , Table<std::string, int>
+    , TreeT<std::string, int>
+    , Tree<std::string, int>
+    , HashTable<int, std::string>
+    , my_unordered_map<int, std::string>
 
-TEST_F(translate, brackets_work)
-{
-    auto tmp=solve("1.5 * ( 10 + 4 ) / 7",a);
-    EXPECT_EQ(3, tmp.first);
-}
-TEST_F(translate, cant_zero_div)
-{
-    auto tmp=solve("5 / 0",a);
-    EXPECT_EQ(1, tmp.second);
-}
-TEST_F(translate, cant_calc_emty_brackets)
-{
-    auto tmp=solve("1 + ( )",a);
-    EXPECT_EQ(1, tmp.second);
-}
-
-TEST_F(translate, can_neg_nmber)
-{
-    auto tmp=solve(" - 1 + 1",a);
-    EXPECT_EQ(0, tmp.first);
-}
-TEST_F(translate, cant_solve_invalid)
-{
-    auto tmp=solve("* 1",a);
-    EXPECT_EQ(0, tmp.first);
-}
+>;
+TYPED_TEST_SUITE(FooTest, MyTypes);
 /*
-TEST_F(translate, can_solve_variable)
+TYPED_TEST(FooTest, can_insert)
 {
-    a.push_back();a.push_back(2);
-    auto tmp=solve("- a + b",a);
-    EXPECT_EQ(1, tmp.first);
+    typename TestFixture::MyTable values;
+    EXPECT_NO_THROW(values.insert(std::make_pair("str", 5551)));
 }
-TEST_F(translate, cant_solve_invalid_variable_1)
+
+TYPED_TEST(FooTest, correct_value_after_insert)
 {
-    a.push_back(1);a.push_back(2);
-    auto tmp=solve("- 1a + b",a);
-    EXPECT_EQ(1, tmp.second);
+    typename TestFixture::MyTable values;
+    values.insert(std::make_pair("str", 5551));
+    EXPECT_EQ(values["str"], 5551);
 }
-TEST_F(translate, cant_solve_invalid_variable_2)
+
+TYPED_TEST(FooTest, can_used_square_brackets)
 {
-    a.push_back(1);a.push_back(2);
-    auto tmp=solve("- (a + b",a);
-    EXPECT_EQ(1, tmp.second);
+    typename TestFixture::MyTable values;
+    EXPECT_NO_THROW(values["de"] = 58);
+}
+
+TYPED_TEST(FooTest, square_brackets_from_a_non_existent_key_returns_the_default_value)
+{
+    typename TestFixture::MyTable values;
+    EXPECT_EQ(values["de"], 0);
+}
+
+TYPED_TEST(FooTest, can_return_iterator_to_begining)
+{
+    typename TestFixture::MyTable values;
+    EXPECT_NO_THROW(values.begin());
+}
+
+TYPED_TEST(FooTest, can_return_iterator_to_ending)
+{
+    typename TestFixture::MyTable values;
+    EXPECT_NO_THROW(values.end());
+}
+
+TYPED_TEST(FooTest, can_erase)
+{
+    typename TestFixture::MyTable values;
+    values["str"] = 5;
+    EXPECT_NO_THROW(values.erase("str"));
+}
+
+
+
+TYPED_TEST(FooTest, after_erase_correct_value)
+{
+    typename TestFixture::MyTable values;
+    values["str"] = 5;
+    values.erase("str");
+    EXPECT_EQ(values["str"], 0);
 }
 */
+
+
+
+
+
