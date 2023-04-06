@@ -22,7 +22,7 @@ using MyTypes = ::testing::Types<
 
 >;
 TYPED_TEST_SUITE(FooTest, MyTypes);
-/*
+
 TYPED_TEST(FooTest, can_insert)
 {
     typename TestFixture::MyTable values;
@@ -76,7 +76,7 @@ TYPED_TEST(FooTest, after_erase_correct_value)
     values.erase("str");
     EXPECT_EQ(values["str"], 0);
 }
-*/
+
 
 
 
