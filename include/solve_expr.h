@@ -85,7 +85,7 @@ stdvector<std::pair<polynome,bool>> solve(std::string str, stdvector<polynome>& 
     TDynamicQueue<State>cop(post);
     if (!check_post(post,res,var_hash)) return err;
     post = cop;
-    if (!check_post(post,res,var_hash)) return err;
+    if (!check_post(post,res,var_tree)) return err;
     post=cop;
     if (!check_post(post,res,var_table)) return err;
     post=cop;

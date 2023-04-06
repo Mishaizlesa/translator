@@ -39,6 +39,11 @@ public:
         }
         return tmp;
     }
+
+    polynome operator -(polynome& b) {
+        b = b * (-1);
+        return *this + b;
+    }
     
     polynome operator *(polynome& b){
         polynome tmp;
@@ -62,6 +67,7 @@ public:
         while(it!=data.end()){
             auto ins=*it*b;
             tmp.insert(ins);
+            ++it;
         }
         return tmp;
     }
@@ -71,6 +77,7 @@ public:
         while(it!=data.end()){
             auto ins=*it/b;
             tmp.insert(ins);
+            ++it;
         }
         return tmp;
     }
