@@ -117,6 +117,13 @@ public:
         auto it1 = this->data.begin();
         auto it2 = p.data.begin();
 
+        
+        if (data.size() == 1 && p.data.size() == 0 && (*it1) == monome(0.0, 0, 0, 0))
+            return true;
+
+        if (data.size() == 0 && p.data.size() == 1 && (*it2) == monome(0.0, 0, 0, 0))
+            return true;
+
         for (; it1 != this->data.end() && it2 != p.data.end(); ++it1, ++it2)
         {
             if ((*it1) != (*it2))
