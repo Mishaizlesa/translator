@@ -1,6 +1,6 @@
 cmake_minimum_required(VERSION 3.10)
 
-option(BUILD_SAMPLES ON)
+option(BUILD_SAMPLES OFF)
 
 set(PROJECT_NAME arithmetical_translate)
 project(${PROJECT_NAME})
@@ -14,7 +14,6 @@ set(MP2_INCLUDE "${CMAKE_CURRENT_SOURCE_DIR}/include")
 
 add_subdirectory(include)
 
-add_subdirectory(samples)
 
 if(BUILD_TESTING)
     add_subdirectory(3rdparty/googletest)
