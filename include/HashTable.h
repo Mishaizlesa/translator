@@ -48,7 +48,8 @@ public:
 	iterator begin();
 	iterator end() { return iterator(v.back().end(), v.size() - 1, this); }
 	iterator insert(const std::pair<TKey, TValue>& el);
-	iterator erase(const TKey& key); // элемент, который встал на место удаленного 
+	iterator erase(const TKey& key);
+    
 	iterator find(const TKey& key);
 	void clear() { v.clear(); }
 	~HashTable() = default;
@@ -179,12 +180,12 @@ inline typename HashTable<TValue, TKey>::iterator HashTable<TValue, TKey>::erase
 template<class TValue, class TKey>
 inline typename HashTable<TValue, TKey>::iterator HashTable<TValue, TKey>::find(const TKey& key)
 {
-	size_t hash = hash_str(el.first);
+	size_t hash = hash_str(key);
 	size_t index = get_index(hash);
 
 
 	for (auto it = v[index].begin(); it != v[index].end(); ++it)
-		if ((*it).first == el.first)
+		if ((*it).first == key)
 			return iterator(it, index, this);
 
 	return end();

@@ -17,7 +17,7 @@ public:
         y=y_;
         z=z_;
     }
-    bool operator > (const monome& b){
+    bool operator > (monome& b){
         if (x==b.x){
             if (y==b.y){
                 return z>b.z;

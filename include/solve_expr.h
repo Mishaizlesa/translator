@@ -29,11 +29,10 @@ stdvector<std::pair<polynome,bool>> solve(std::string str, stdvector<polynome>& 
     TableT<std::string, polynome>var_table_unord;
     if (!check_str(str,inf,tmp_var)) return err;
     if (test.get_size()){
-        int i=0;
+        int i=-1;
         for(auto& el:tmp_var){
-            el.second=test[i];
-            if (el.first.size())
-                i++;
+            if (el.first.size()){ i++;
+                el.second=test[i];}
         }
     }
     else{
@@ -78,6 +77,7 @@ stdvector<std::pair<polynome,bool>> solve(std::string str, stdvector<polynome>& 
         var_tree_rb[el.first]=el.second;
         var_table_unord[el.first]=el.second;
     }
+    int a=111;
     if (!check_infix(inf,post)){
         return err;
     }

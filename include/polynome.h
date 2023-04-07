@@ -6,17 +6,21 @@ private:
     TDynamicList<monome>data;
 public:
     polynome()=default;
-    void insert(monome& a){
+    void insert(const monome& a_){
+        auto a=a_;
         auto it=data.begin();
         auto prev=it;
-        while (it!=data.end() && a>(*it)) {
+        while (it!=data.end() && *it>a) {
             prev=it;
             ++it;
         }
         if (it.node){
             if (*it ^ a){
                 *it=*it+a;
-            }else data.insert_after(it,a);
+            }else{
+                if (prev==it) data.push_front(a);
+                else data.insert_after(prev,a);
+            }
         }else{
             if (data.begin()==data.end()) data.push_front(a);
             else data.insert_after(prev,a);
@@ -93,7 +97,11 @@ public:
         it=div.data.begin();
         auto ptr=b.data.begin();
         polynome res;
-        while((*ptr).getx()<=(*it).getx() && (*ptr).gety()<=(*it).gety() && (*ptr).getz()<=(*it).getz()){
+        int f;
+        for(;;){
+            it=div.data.begin();
+            while(it!=data.end() && ((*ptr).getx()>(*it).getx() || (*ptr).gety()>(*it).gety() || (*ptr).getz()>(*it).getz())) ++it;
+            if (it==data.end()) break;
             auto m1=*it;
             auto m2=*ptr;
             auto r=m1/m2;
@@ -104,7 +112,6 @@ public:
                 div.insert(ins);
                 ++tmp;
             }
-            it=div.data.begin();
         }
         return res;
     }
@@ -190,6 +197,6 @@ public:
         return o;
     }
     bool check_zero(){
-        return abs((*data.begin()).getc())<1e7;
+        return abs((*data.begin()).getc())<1e-7;
     }
 };

@@ -185,7 +185,7 @@ template <class arr> bool check_post(TDynamicQueue<State>& expr, stdvector<std::
                     tmp.push(a * b);
                     break;
                 case '/':
-                    if (!b.check_zero()) return false;
+                    if (b.check_zero()) return false;
                     tmp.push(a / b);
                     break;
             }
