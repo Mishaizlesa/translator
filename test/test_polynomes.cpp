@@ -5,7 +5,7 @@ class polunome_f :
     public ::testing::TestWithParam<int> {
 
 protected:
-
+    //
     polynome A, B, C, D;
 
     polunome_f()
